@@ -41,3 +41,12 @@ func (u *userUsecase) Register(user *domain.User) error {
 
 	return u.userRepo.Create(user)
 }
+
+
+func (u *userUsecase) Login(email, password string) (*domain.User, error) {
+  return nil, errors.New("not implemented")
+}
+
+func (u *userUsecase) GetProfile(id string) (*domain.User, error) {
+  return nil, errors.New("not implemented")
+}
