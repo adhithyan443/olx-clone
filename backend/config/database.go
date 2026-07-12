@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/adhithyan443/olx-clone/backend/internal/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -12,7 +13,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	
+
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		os.Getenv("DB_HOST"),
@@ -29,7 +30,14 @@ func ConnectDatabase() {
 		log.Fatal("Database connection failed: ", err)
 	}
 
+
 	DB = db
 
 	log.Println("PostgreSQL connected sucessfully")
+}
+
+func MigrateDatabase() error{
+	return  DB.AutoMigrate(
+		&domain.User{},
+	)
 }

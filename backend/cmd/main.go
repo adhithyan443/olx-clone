@@ -13,6 +13,10 @@ func main() {
 	config.LoadEnv()
 	config.ConnectDatabase()
 
+	if err := config.MigrateDatabase(); err != nil {
+		log.Fatal("Migration Failed: ", err)
+	}
+
 	router := gin.Default()
 
 	router.GET("/health", func(ctx *gin.Context) {
