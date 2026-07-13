@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { loginUser } from "./authService";
+import { getProfile, loginUser } from "./authService";
 
 export const login = createAsyncThunk(
 
@@ -9,7 +9,7 @@ export const login = createAsyncThunk(
         try {
             return await loginUser(userData);
         } catch (error) {
-            
+
             return thunkAPI.rejectWithValue(
                 error.response.data.message
             );
@@ -17,3 +17,19 @@ export const login = createAsyncThunk(
         }
     }
 );
+
+export const loadUser = createAsyncThunk(
+    "auth/loadUser",
+
+    async (_, thunkAPI) => {
+
+        try {
+            return await getProfile();
+        } catch (error) {
+
+            return thunkAPI.rejectWithValue(
+                error.response?.data?.message || "Unauthorized"
+            )
+        }
+    }
+)
