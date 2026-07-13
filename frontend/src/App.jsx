@@ -14,7 +14,7 @@ function App() {
     if (token){
       dispatch(loadUser());
     }
-  })
+  },[dispatch])
 
   return <AppRoutes />
 }

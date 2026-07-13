@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { loadUser, login } from "./authThunk";
 
 
+
 const initialState = {
     user: null,
     token: null,
@@ -24,6 +25,7 @@ const authSlice = createSlice({
             state.error = null;
             state.isAuthenticated = false;
             localStorage.removeItem("token");
+          
 
         },
 

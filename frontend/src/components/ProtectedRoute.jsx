@@ -6,5 +6,5 @@ export default function ProtectedRoute() {
         state => state.auth.isAuthenticated
     );
 
-    return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
+    return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 }
