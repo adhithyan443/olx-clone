@@ -11,7 +11,7 @@ import (
 
 type UserUsecase interface {
 	Register(user *domain.User) error
-	Login(email, password string) (string, error)
+	Login(email, password string) (*domain.User, string, error)
 	GetProfile(id string) (*domain.User, error)
 }
 
@@ -43,18 +43,18 @@ func (u *userUsecase) Register(user *domain.User) error {
 	return u.userRepo.Create(user)
 }
 
-func (u *userUsecase) Login(email, password string) (string, error) {
+func (u *userUsecase) Login(email, password string) (*domain.User, string, error) {
 
 	user, err := u.userRepo.FindByEmail(email)
 
 	if err != nil {
-		return "", errors.New("invalid email or password")
+		return nil, "", errors.New("invalid email or password")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 
 	if err != nil {
-		return "", errors.New("invalid email or password")
+		return nil, "", errors.New("invalid email or password")
 	}
 
 	token, err := utils.GenerateToken(
@@ -63,10 +63,10 @@ func (u *userUsecase) Login(email, password string) (string, error) {
 	)
 
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
-	return token, nil
+	return user, token, nil
 
 }
 

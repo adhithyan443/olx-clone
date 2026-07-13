@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/adhithyan443/olx-clone/backend/internal/domain"
@@ -48,6 +49,9 @@ func (h *UserHandler) Register(c *gin.Context) {
 }
 
 func (h *UserHandler) Login(ctx *gin.Context) {
+
+	log.Println("====== LOGIN API HIT ======")
+
 	var request dto.LoginRequest
 
 	if err := ctx.ShouldBindJSON(&request); err != nil {
@@ -61,7 +65,7 @@ func (h *UserHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := h.userUsecase.Login(
+	user, token, err := h.userUsecase.Login(
 		request.Email,
 		request.Password,
 	)
@@ -74,10 +78,19 @@ func (h *UserHandler) Login(ctx *gin.Context) {
 		return
 	}
 
+	response := dto.LoginResponse{
+		Token: token,
+		User: dto.UserResponse{
+			ID:    user.ID.String(),
+			Name:  user.Name,
+			Email: user.Email,
+		},
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "Login successful",
-		"token":   token,
+		"data":    response,
 	})
 }
 
