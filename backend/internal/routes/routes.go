@@ -10,6 +10,7 @@ func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler){
 	api := router.Group("/api")
 	{
 		api.POST("/register",userHandler.Register)
+		api.POST("/login", userHandler.Login)
 	}
 
 	router.GET("/health", func(ctx *gin.Context) {

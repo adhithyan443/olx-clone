@@ -5,12 +5,13 @@ import (
 
 	"github.com/adhithyan443/olx-clone/backend/internal/domain"
 	"github.com/adhithyan443/olx-clone/backend/internal/repository"
+	"github.com/adhithyan443/olx-clone/backend/internal/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserUsecase interface {
 	Register(user *domain.User) error
-	Login(email, password string) (*domain.User, error)
+	Login(email, password string) (string, error)
 	GetProfile(id string) (*domain.User, error)
 }
 
@@ -42,11 +43,33 @@ func (u *userUsecase) Register(user *domain.User) error {
 	return u.userRepo.Create(user)
 }
 
+func (u *userUsecase) Login(email, password string) (string, error) {
 
-func (u *userUsecase) Login(email, password string) (*domain.User, error) {
-  return nil, errors.New("not implemented")
+	user, err := u.userRepo.FindByEmail(email)
+
+	if err != nil {
+		return "", errors.New("invalid email or password")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+	if err != nil {
+		return "", errors.New("invalid email or password")
+	}
+
+	token, err := utils.GenerateToken(
+		user.ID.String(),
+		user.Email,
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+
 }
 
 func (u *userUsecase) GetProfile(id string) (*domain.User, error) {
-  return nil, errors.New("not implemented")
+	return nil, errors.New("not implemented")
 }

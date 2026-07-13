@@ -2,7 +2,9 @@ package handler
 
 import (
 	"net/http"
+
 	"github.com/adhithyan443/olx-clone/backend/internal/domain"
+	"github.com/adhithyan443/olx-clone/backend/internal/dto"
 	"github.com/adhithyan443/olx-clone/backend/internal/usecase"
 	"github.com/gin-gonic/gin"
 )
@@ -31,16 +33,50 @@ func (h *UserHandler) Register(c *gin.Context) {
 
 	err := h.userUsecase.Register(&user)
 
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"message" : err.Error(),
+			"message": err.Error(),
 		})
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
+		"success": true,
+		"message": "User registered successfully",
+	})
+}
+
+func (h *UserHandler) Login(ctx *gin.Context) {
+	var request dto.LoginRequest
+
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Invalid request body",
+			"error":   err.Error(),
+		})
+
+		return
+	}
+
+	token, err := h.userUsecase.Login(
+		request.Email,
+		request.Password,
+	)
+
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success" : false,
+			"message" : err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
 		"success" : true,
-		"message" : "User registered successfully",
+		"message" : "Login successful",
+		"token" : token,
 	})
 }
