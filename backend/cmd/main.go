@@ -9,6 +9,7 @@ import (
 	"github.com/adhithyan443/olx-clone/backend/internal/repository"
 	"github.com/adhithyan443/olx-clone/backend/internal/routes"
 	"github.com/adhithyan443/olx-clone/backend/internal/usecase"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,6 +23,7 @@ func main() {
 	}
 
 	router := gin.Default()
+	router.Use(cors.Default())
 
 	repo := repository.NewUserRepository(config.DB)
 	userUsecase := usecase.NewUserUsecase(repo)

@@ -68,22 +68,20 @@ func (h *UserHandler) Login(ctx *gin.Context) {
 
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"success" : false,
-			"message" : err.Error(),
+			"success": false,
+			"message": err.Error(),
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"success" : true,
-		"message" : "Login successful",
-		"token" : token,
+		"success": true,
+		"message": "Login successful",
+		"token":   token,
 	})
 }
 
-
-
-func (h *UserHandler) GetProfile(ctx *gin.Context){
+func (h *UserHandler) GetProfile(ctx *gin.Context) {
 
 	userID := ctx.GetString("userID")
 
@@ -91,15 +89,21 @@ func (h *UserHandler) GetProfile(ctx *gin.Context){
 
 	if err != nil {
 
-		ctx.JSON(http.StatusNotFound,gin.H{
-			"success" : false,
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
 			"message": "User not found",
 		})
 		return
 	}
 
+	response := dto.ProfileResponse{
+		ID:    user.ID.String(),
+		Name:  user.Name,
+		Email: user.Email,
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
-		"success" : true,
-		"data": user,
+		"success": true,
+		"data":    response,
 	})
 }
