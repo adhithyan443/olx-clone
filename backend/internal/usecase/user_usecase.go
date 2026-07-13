@@ -71,5 +71,12 @@ func (u *userUsecase) Login(email, password string) (string, error) {
 }
 
 func (u *userUsecase) GetProfile(id string) (*domain.User, error) {
-	return nil, errors.New("not implemented")
+
+	user, err := u.userRepo.FindByID(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

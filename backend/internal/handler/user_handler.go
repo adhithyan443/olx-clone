@@ -80,3 +80,26 @@ func (h *UserHandler) Login(ctx *gin.Context) {
 		"token" : token,
 	})
 }
+
+
+
+func (h *UserHandler) GetProfile(ctx *gin.Context){
+
+	userID := ctx.GetString("userID")
+
+	user, err := h.userUsecase.GetProfile(userID)
+
+	if err != nil {
+
+		ctx.JSON(http.StatusNotFound,gin.H{
+			"success" : false,
+			"message": "User not found",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success" : true,
+		"data": user,
+	})
+}
