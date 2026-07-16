@@ -31,6 +31,7 @@ func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, productHa
 		api.GET("/my-products", middleware.AuthMiddleware(), productHandler.GetMyProduct)
 		api.PUT("/products/:id", middleware.AuthMiddleware(),productHandler.Update)
 		api.DELETE("/products/:id", middleware.AuthMiddleware(), productHandler.Delete)
+		api.POST("/checkout", middleware.AuthMiddleware(),productHandler.Checkout)
 	}
 
 	router.GET("/health", func(ctx *gin.Context) {

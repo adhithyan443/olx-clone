@@ -12,8 +12,9 @@ type ProductUsecase interface {
 	Update(product *domain.Product, userID string) error
 	Delete(productID string, userID string) error
 	GetByID(id string) (*domain.Product, error)
-	GetAll() ([]domain.Product, error)
+	GetAll(category string, minPrice, maxPrice float64, sort string) ([]domain.Product, error)
 	GetMyProduct(userID string) ([]domain.Product, error)
+	Checkout(productIDs []string) error
 }
 
 type productUsecase struct {
@@ -30,9 +31,14 @@ func (u *productUsecase) Create(product *domain.Product) error {
 	return u.productRepo.Create(product)
 }
 
-func (u *productUsecase) GetAll() ([]domain.Product, error) {
+func (u *productUsecase) GetAll(category string, minPrice, maxPrice float64, sort string) ([]domain.Product, error) {
 
-	return u.productRepo.FindAll()
+	return u.productRepo.FindAll(
+		category,
+		minPrice,
+		maxPrice,
+		sort,
+	)
 }
 
 func (u *productUsecase) GetByID(id string) (*domain.Product, error) {
@@ -71,4 +77,10 @@ func (u *productUsecase) Delete(productID string, userID string) error {
 	}
 
 	return u.productRepo.Delete(productID)
+}
+
+func (u *productUsecase) Checkout(productIDs []string) error {
+
+	return u.productRepo.Checkout(productIDs)
+
 }

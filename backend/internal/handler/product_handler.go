@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/adhithyan443/olx-clone/backend/internal/domain"
 	"github.com/adhithyan443/olx-clone/backend/internal/dto"
@@ -76,7 +77,23 @@ func (h *ProductHandler) Create(ctx *gin.Context) {
 
 func (h *ProductHandler) GetAll(ctx *gin.Context) {
 
-	products, err := h.productUsecase.GetAll()
+	category := ctx.Query("category")
+
+	minPrice, _ := strconv.ParseFloat(
+		ctx.DefaultQuery("minPrice", "0"),
+		64,
+	)
+
+	maxPrice, _ := strconv.ParseFloat(
+		ctx.DefaultQuery("maxPrice", "0"),
+		64,
+	)
+
+	sort := ctx.DefaultQuery("sort", "newest")
+
+	products, err := h.productUsecase.GetAll(
+		category, minPrice, maxPrice, sort,
+	)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -271,4 +288,33 @@ func (h *ProductHandler) Delete(ctx *gin.Context) {
 		"message": "Product deleted successfully",
 	})
 
+}
+
+func (h *ProductHandler) Checkout(ctx *gin.Context) {
+
+	var request dto.CheckoutRequest
+
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Invalid request",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	err := h.productUsecase.Checkout(request.ProductIDs)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Checkout successful",
+	})
 }
