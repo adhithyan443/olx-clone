@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler) {
+func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, productHandler *handler.ProductHandler) {
 
 	api := router.Group("/api")
 	{
@@ -18,6 +18,18 @@ func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler) {
 			middleware.AuthMiddleware(),
 			userHandler.GetProfile,
 		)
+
+		//Products
+		api.POST(
+			"/products",
+			middleware.AuthMiddleware(),
+			productHandler.Create,
+		)
+
+		api.GET("/products", productHandler.GetAll)
+		api.GET("/products/:id", productHandler.GetByID)
+		api.GET("/my-products", middleware.AuthMiddleware(), productHandler.GetMyProduct)
+		api.PUT("/products/:id", middleware.AuthMiddleware(),productHandler.Update)
 	}
 
 	router.GET("/health", func(ctx *gin.Context) {

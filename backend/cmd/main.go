@@ -46,11 +46,21 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	repo := repository.NewUserRepository(config.DB)
-	userUsecase := usecase.NewUserUsecase(repo)
+	//user
+	userRepo := repository.NewUserRepository(config.DB)
+	userUsecase := usecase.NewUserUsecase(userRepo)
 	userHandler := handler.NewUserHandler(userUsecase)
 
-	routes.SetupRoutes(router, userHandler)
+	//products
+	productRepo := repository.NewProductRepository(config.DB)
+	productUsecase := usecase.NewProductUsecase(productRepo)
+	productHandler := handler.NewProductHandler(productUsecase)
+
+	routes.SetupRoutes(
+		router,
+		userHandler,
+		productHandler,
+	)
 
 	// router.GET("/health", func(ctx *gin.Context) {
 	// 	ctx.JSON(200, gin.H{
