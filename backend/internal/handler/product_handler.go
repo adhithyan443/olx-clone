@@ -242,3 +242,33 @@ func (h *ProductHandler) Update(ctx *gin.Context) {
 		"message": "Product updated successfully",
 	})
 }
+
+func (h *ProductHandler) Delete(ctx *gin.Context) {
+	productID := ctx.Param("id")
+	userID := ctx.GetString("userID")
+
+	err := h.productUsecase.Delete(productID, userID)
+
+	if err != nil {
+
+		if err.Error() == "unauthorized" {
+			ctx.JSON(http.StatusForbidden, gin.H{
+				"success": false,
+				"message": "You are not allowed to delete this product",
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Product deleted successfully",
+	})
+
+}
