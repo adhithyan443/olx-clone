@@ -6,6 +6,9 @@ import NotFound from "../pages/NotFound"
 import ProtectedRoute from "../components/ProtectedRoute"
 import Layout from "../layout/Layout"
 import Home from "../pages/Home"
+import ProductDetails from "../pages/ProductDetails"
+import Sell from "../pages/Sell"
+import MyProducts from "../pages/MyProducts"
 export default function AppRoutes() {
 
     return (
@@ -13,7 +16,7 @@ export default function AppRoutes() {
             <Routes>
 
                 <Route path="/login" element={<Login />} />
-                
+
                 <Route
                     path="/register"
                     element={<Register />}
@@ -30,8 +33,14 @@ export default function AppRoutes() {
                             element={<Profile />}
                         />
 
-                    </Route>
+                        <Route path="/products/:id" element={<ProductDetails />} />
 
+                        <Route path="/sell" element={<Sell />} />
+                        <Route path="/sell/:id" element={<Sell />} />
+                        
+                        <Route path="/my-products" element={<MyProducts />} />
+
+                    </Route>
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

@@ -186,6 +186,9 @@ func (h *ProductHandler) GetMyProduct(ctx *gin.Context) {
 		})
 	}
 
+	if response == nil {
+		response = []dto.ProductResponse{}
+	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data":    response,
