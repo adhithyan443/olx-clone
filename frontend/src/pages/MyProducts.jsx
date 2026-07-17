@@ -21,7 +21,7 @@ export default function MyProducts() {
 
     return (
 
-        <div className="bg-gray-100 min-h-screen">
+        <div className="bg-gray-100 min-h-screen pt-25">
 
             <div className="max-w-7xl mx-auto p-6">
 

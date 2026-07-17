@@ -3,7 +3,7 @@ import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchProductsById } from "../features/product/productThunk";
-import { addToCart } from "../features/cart/cartSlice";
+import { addProductToCart } from "../features/cart/cartThunk";
 import { toast } from "react-toastify";
 
 export default function ProductDetails() {
@@ -14,7 +14,7 @@ export default function ProductDetails() {
 
     const { product, loading, error } = useSelector((state) => state.products)
     const { user } = useSelector(state => state.auth);
-    const { items } = useSelector(state => state.cart);
+    // const { items } = useSelector(state => state.cart);
 
 
     useEffect(() => {
@@ -29,24 +29,26 @@ export default function ProductDetails() {
 
     const isOwner = user?.id === product?.userId;
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
 
-        const alreadyExists = items.some(
-            item => item.id === product.id
+        const result = await dispatch(
+            addProductToCart(product.id)
         );
 
-        if (alreadyExists) {
-            toast.info("Product is already in your cart");
-            return;
+        if (addProductToCart.fulfilled.match(result)) {
+
+            toast.success("Product added to cart");
+
+        } else {
+
+            toast.error(result.payload);
+
         }
 
-        dispatch(addToCart(product));
-
-        toast.success("Product added to cart");
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen py-8">
+        <div className="bg-gray-100 min-h-screen pt-25">
 
             <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-md p-8 grid md:grid-cols-2 gap-10">
 
@@ -56,7 +58,7 @@ export default function ProductDetails() {
                     <img
                         src={product.imageUrl}
                         alt={product.title}
-                        className="w-full h-[500px] object-cover rounded-xl"
+                        className="w-full h-125 object-cover rounded-xl"
                     />
 
                 </div>

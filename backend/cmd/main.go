@@ -56,10 +56,16 @@ func main() {
 	productUsecase := usecase.NewProductUsecase(productRepo)
 	productHandler := handler.NewProductHandler(productUsecase)
 
+	//cart
+	cartRepo := repository.NewCartRepository(config.DB)
+	cartUsecase := usecase.NewCartUsecase(cartRepo)
+	cartHandler := handler.NewCartHandler(cartUsecase)
+
 	routes.SetupRoutes(
 		router,
 		userHandler,
 		productHandler,
+		cartHandler,
 	)
 
 	// router.GET("/health", func(ctx *gin.Context) {

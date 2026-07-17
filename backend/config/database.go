@@ -40,5 +40,6 @@ func MigrateDatabase() error{
 	return  DB.AutoMigrate(
 		&domain.User{},
 		&domain.Product{},
+		&domain.CartItem{},
 	)
 }

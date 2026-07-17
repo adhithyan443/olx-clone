@@ -17,8 +17,14 @@ export default function Navbar() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+
+
     const { isAuthenticated, user } = useSelector(
         (state) => state.auth
+    );
+
+    const { items } = useSelector(
+        (state) => state.cart
     );
 
     const handleLogout = () => {
@@ -26,7 +32,7 @@ export default function Navbar() {
         navigate("/login");
     };
     return (
-        <nav  className="fixed top-0 left-0 w-full h-16 bg-white shadow-md z-50">
+        <nav className="fixed top-0 left-0 w-full h-16 bg-white shadow-md z-50">
             <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between ">
 
                 {/* Left */}
@@ -98,13 +104,18 @@ export default function Navbar() {
 
                     <Link
                         to="/cart"
-                        className="hover:text-teal-600"
+                        className="relative hover:text-teal-600"
                     >
                         <FaShoppingCart
-                        
                             size={20}
                             className="text-gray-600 hover:text-teal-700 cursor-pointer"
                         />
+
+                        {items.length > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                {items.length}
+                            </span>
+                        )}
                     </Link>
 
                     {/* <FaUserCircle

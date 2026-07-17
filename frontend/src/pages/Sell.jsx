@@ -98,7 +98,7 @@ export default function Sell() {
     }
 
     return (
-        <div className="bg-gray-100 min-h-screen py-10">
+        <div className="bg-gray-100 min-h-screen  pt-25">
 
             <div className="max-w-3xl mx-auto bg-white shadow-md rounded-2xl p-8">
 

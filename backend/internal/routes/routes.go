@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, productHandler *handler.ProductHandler) {
+func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, productHandler *handler.ProductHandler, cartHandler *handler.CartHandler) {
 
 	api := router.Group("/api")
 	{
@@ -29,9 +29,14 @@ func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, productHa
 		api.GET("/products", productHandler.GetAll)
 		api.GET("/products/:id", productHandler.GetByID)
 		api.GET("/my-products", middleware.AuthMiddleware(), productHandler.GetMyProduct)
-		api.PUT("/products/:id", middleware.AuthMiddleware(),productHandler.Update)
+		api.PUT("/products/:id", middleware.AuthMiddleware(), productHandler.Update)
 		api.DELETE("/products/:id", middleware.AuthMiddleware(), productHandler.Delete)
-		api.POST("/checkout", middleware.AuthMiddleware(),productHandler.Checkout)
+		api.POST("/checkout", middleware.AuthMiddleware(), productHandler.Checkout)
+
+		api.POST("/cart", middleware.AuthMiddleware(), cartHandler.AddToCart)
+		api.GET("/cart", middleware.AuthMiddleware(), cartHandler.GetCart)
+		api.DELETE("/cart/:productId", middleware.AuthMiddleware(), cartHandler.Remove)
+		api.DELETE("/cart", middleware.AuthMiddleware(), cartHandler.Clear)
 	}
 
 	router.GET("/health", func(ctx *gin.Context) {

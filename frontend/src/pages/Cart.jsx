@@ -1,32 +1,34 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearCart, removeFromCart } from "../features/cart/cartSlice";
+import {
+    removeProductFromCart,
+    clearUserCart,
+} from "../features/cart/cartThunk";
 import { useNavigate } from "react-router-dom";
-import { checkoutProducts, fetchProducts } from "../features/product/productThunk";
+import {
+    checkoutProducts,
+    fetchProducts,
+} from "../features/product/productThunk";
 import { toast } from "react-toastify";
 
 export default function Cart() {
 
     const dispatch = useDispatch();
-
-    const { items } = useSelector(state => state.cart);
-    const { loading } = useSelector(state => state.products);
-
     const navigate = useNavigate();
+
+    const { items } = useSelector((state) => state.cart);
+    const { loading } = useSelector((state) => state.products);
 
     const handleCheckout = async () => {
 
-        const productIds = items.map(item => item.id);
+        const productIds = items.map((item) => item.ProductID);
 
         const result = await dispatch(
-
             checkoutProducts(productIds)
-
         );
 
         if (checkoutProducts.fulfilled.match(result)) {
 
-            dispatch(clearCart());
-
+            await dispatch(clearUserCart());
 
             dispatch(fetchProducts());
 
@@ -39,7 +41,6 @@ export default function Cart() {
             toast.error(result.payload || "Checkout failed");
 
         }
-
     };
 
     if (items.length === 0) {
@@ -59,18 +60,14 @@ export default function Cart() {
     }
 
     const total = items.reduce(
-
-        (sum, item) => sum + item.price,
-
+        (sum, item) => sum + item.Product.Price,
         0
-
     );
 
     return (
+        <div className="bg-gray-100 min-h-screen pt-24">
 
-        <div className="bg-gray-100 min-h-screen py-10">
-
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto px-4">
 
                 <h1 className="text-3xl font-bold mb-8">
                     My Cart
@@ -78,37 +75,41 @@ export default function Cart() {
 
                 <div className="space-y-6">
 
-                    {items.map(product => (
+                    {items.map((item) => (
 
                         <div
-                            key={product.id}
-                            className="bg-white rounded-xl shadow flex p-5 gap-6"
+                            key={item.ID}
+                            className="bg-white rounded-xl shadow flex gap-6 p-5"
                         >
 
                             <img
-                                src={product.imageUrl}
-                                alt={product.title}
+                                src={item.Product.ImageURL}
+                                alt={item.Product.Title}
                                 className="w-40 h-40 object-cover rounded-lg"
                             />
 
                             <div className="flex-1">
 
                                 <h2 className="text-2xl font-semibold">
-                                    {product.title}
+                                    {item.Product.Title}
                                 </h2>
 
                                 <p className="text-gray-500 mt-2">
-                                    {product.category}
+                                    {item.Product.Category}
                                 </p>
 
                                 <p className="text-3xl font-bold text-teal-700 mt-4">
-                                    ₹{product.price.toLocaleString()}
+                                    ₹{item.Product.Price.toLocaleString()}
                                 </p>
 
                             </div>
 
                             <button
-                                onClick={() => dispatch(removeFromCart(product.id))}
+                                onClick={() =>
+                                    dispatch(
+                                        removeProductFromCart(item.ProductID)
+                                    )
+                                }
                                 className="bg-red-500 text-white px-5 py-3 rounded-lg hover:bg-red-600 h-fit"
                             >
                                 Remove
@@ -116,17 +117,17 @@ export default function Cart() {
 
                         </div>
 
-
-
                     ))}
 
-                    <div className="mt-10 bg-white rounded-xl shadow p-6">
+                    <div className="bg-white rounded-xl shadow p-6">
 
                         <div className="flex justify-between text-2xl font-bold">
 
                             <span>Total</span>
 
-                            <span>₹{total.toLocaleString()}</span>
+                            <span>
+                                ₹{total.toLocaleString()}
+                            </span>
 
                         </div>
 
@@ -134,8 +135,8 @@ export default function Cart() {
 
                     <button
                         onClick={handleCheckout}
-                        disabled={loading || items.length === 0}
-                        className="w-full mt-6 bg-teal-700 text-white py-4 rounded-lg hover:bg-teal-800"
+                        disabled={loading}
+                        className="w-full mt-6 bg-teal-700 text-white py-4 rounded-lg hover:bg-teal-800 disabled:bg-gray-400"
                     >
                         {loading ? "Processing..." : "Proceed to Checkout"}
                     </button>
@@ -145,6 +146,5 @@ export default function Cart() {
             </div>
 
         </div>
-
     );
 }
