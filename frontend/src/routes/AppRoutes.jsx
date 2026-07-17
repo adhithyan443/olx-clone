@@ -9,6 +9,7 @@ import Home from "../pages/Home"
 import ProductDetails from "../pages/ProductDetails"
 import Sell from "../pages/Sell"
 import MyProducts from "../pages/MyProducts"
+import Cart from "../pages/Cart"
 export default function AppRoutes() {
 
     return (
@@ -37,8 +38,10 @@ export default function AppRoutes() {
 
                         <Route path="/sell" element={<Sell />} />
                         <Route path="/sell/:id" element={<Sell />} />
-                        
+
                         <Route path="/my-products" element={<MyProducts />} />
+
+                        <Route path="/cart" element={<Cart />} />
 
                     </Route>
                 </Route>

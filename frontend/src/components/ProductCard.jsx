@@ -1,10 +1,28 @@
 import { FaHeart, FaEdit, FaTrash, } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { deleteProduct, fetchMyProducts } from "../features/product/productThunk";
 
 
 export default function ProductCard({ product, isOwner = false }) {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this product?"
+        )
+
+        if (!confirmDelete) return;
+
+        await dispatch(deleteProduct(product.id))
+        dispatch(fetchMyProducts());
+
+    }
 
     return (
         <Link
@@ -74,6 +92,7 @@ export default function ProductCard({ product, isOwner = false }) {
 
                     <button
                         className="w-10 h-10 rounded-full hover:bg-red-100 flex items-center justify-center"
+                        onClick={handleDelete}
                     >
                         <FaTrash className="text-red-500" />
                     </button>

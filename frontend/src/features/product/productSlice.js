@@ -1,6 +1,6 @@
 
 import { createSlice } from "@reduxjs/toolkit";
-import { createProducts, fetchMyProducts, fetchProducts, fetchProductsById, updateProduct } from "./productThunk";
+import { createProducts, fetchMyProducts, fetchProducts, fetchProductsById, updateProduct, deleteProduct } from "./productThunk";
 
 
 const initialState = {
@@ -93,6 +93,19 @@ const productSlice = createSlice({
             })
 
             .addCase(updateProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            .addCase(deleteProduct.pending, (state) => {
+                state.loading = true;
+            })
+
+            .addCase(deleteProduct.fulfilled, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(deleteProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })

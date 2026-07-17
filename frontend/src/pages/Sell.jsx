@@ -203,6 +203,7 @@ export default function Sell() {
                             <option value="">Select Category</option>
                             <option value="Mobile">Mobile</option>
                             <option value="Laptop">Laptop</option>
+                            <option value="Monitor">Monitor</option>
                             <option value="Bike">Bike</option>
                             <option value="Car">Car</option>
                             <option value="Furniture">Furniture</option>

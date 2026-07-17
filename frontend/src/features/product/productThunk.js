@@ -1,6 +1,13 @@
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getProductById, getProducts, createProduct, getMyProducts, updateProduct as updateProductService } from "./productService";
+import {
+    getProductById,
+    getProducts,
+    createProduct,
+    getMyProducts,
+    updateProduct as updateProductService,
+    deleteProduct as deleteProductService
+} from "./productService";
 
 
 export const fetchProducts = createAsyncThunk(
@@ -83,3 +90,17 @@ export const updateProduct = createAsyncThunk(
         }
     }
 );
+
+export const deleteProduct = createAsyncThunk(
+    "products/deleteProduct",
+
+    async (id, thunkAPI) => {
+        try {
+            return await deleteProductService(id);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.response?.data?.message || "Failed to delete product"
+            );
+        }
+    }
+)

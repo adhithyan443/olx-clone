@@ -3,6 +3,7 @@ import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchProductsById } from "../features/product/productThunk";
+import { addToCart } from "../features/cart/cartSlice";
 
 export default function ProductDetails() {
 
@@ -84,7 +85,10 @@ export default function ProductDetails() {
 
                     <div className="flex gap-4 mt-10">
 
-                        <button className="flex-1 bg-teal-700 text-white py-3 rounded-xl flex justify-center items-center gap-3 hover:bg-teal-800">
+                        <button
+                            onClick={() => dispatch(addToCart(product))}
+                            className="flex-1 bg-teal-700 text-white py-3 rounded-xl flex justify-center items-center gap-3 hover:bg-teal-800"
+                        >
 
                             <FaShoppingCart />
 

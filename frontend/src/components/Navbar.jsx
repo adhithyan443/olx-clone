@@ -8,6 +8,7 @@ import {
     FaSearch,
     FaBell,
     FaHeart,
+    FaShoppingCart,
     // FaUserCircle,
 } from "react-icons/fa";
 
@@ -25,7 +26,7 @@ export default function Navbar() {
         navigate("/login");
     };
     return (
-        <nav className="bg-white shadow-sm border-b">
+        <nav className="bg-white shadow-lg ">
             <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
                 {/* Left */}
@@ -95,9 +96,16 @@ export default function Navbar() {
                         />
                     </button>
 
-                    <button className="bg-teal-700 text-white px-5 py-2 rounded-lg hover:bg-teal-800 transition">
-                        Sell
-                    </button>
+                    <Link
+                        to="/cart"
+                        className="hover:text-teal-600"
+                    >
+                        <FaShoppingCart
+                        
+                            size={20}
+                            className="text-gray-600 hover:text-teal-700 cursor-pointer"
+                        />
+                    </Link>
 
                     {/* <FaUserCircle
                         size={34}
