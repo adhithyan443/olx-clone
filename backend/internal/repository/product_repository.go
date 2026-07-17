@@ -67,7 +67,7 @@ func (r *productRepository) FindAll(category string, minPrice, maxPrice float64,
 	}
 
 	if maxPrice > 0 {
-		query = query.Where("price >= ?", maxPrice)
+		query = query.Where("price <= ?", maxPrice)
 	}
 
 	//Sorting
@@ -94,7 +94,6 @@ func (r *productRepository) FindAll(category string, minPrice, maxPrice float64,
 
 	return products, err
 
-	
 }
 
 func (r *productRepository) FindByUser(userID string) ([]domain.Product, error) {

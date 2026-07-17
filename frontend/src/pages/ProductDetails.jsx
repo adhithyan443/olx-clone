@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchProductsById } from "../features/product/productThunk";
 import { addToCart } from "../features/cart/cartSlice";
+import { toast } from "react-toastify";
 
 export default function ProductDetails() {
 
@@ -12,6 +13,9 @@ export default function ProductDetails() {
     const dispatch = useDispatch();
 
     const { product, loading, error } = useSelector((state) => state.products)
+    const { user } = useSelector(state => state.auth);
+    const { items } = useSelector(state => state.cart);
+
 
     useEffect(() => {
         dispatch(fetchProductsById(id));
@@ -22,6 +26,24 @@ export default function ProductDetails() {
     if (error) return <h2 className="text-center mt-20">{error}</h2>;
 
     if (!product) return <h2 className="text-center mt-20">Product not found</h2>;
+
+    const isOwner = user?.id === product?.userId;
+
+    const handleAddToCart = () => {
+
+        const alreadyExists = items.some(
+            item => item.id === product.id
+        );
+
+        if (alreadyExists) {
+            toast.info("Product is already in your cart");
+            return;
+        }
+
+        dispatch(addToCart(product));
+
+        toast.success("Product added to cart");
+    };
 
     return (
         <div className="bg-gray-100 min-h-screen py-8">
@@ -85,16 +107,35 @@ export default function ProductDetails() {
 
                     <div className="flex gap-4 mt-10">
 
-                        <button
-                            onClick={() => dispatch(addToCart(product))}
-                            className="flex-1 bg-teal-700 text-white py-3 rounded-xl flex justify-center items-center gap-3 hover:bg-teal-800"
-                        >
+                        {product.isSold ? (
 
-                            <FaShoppingCart />
+                            <button
+                                disabled
+                                className="flex-1 bg-red-400 text-white py-3 rounded-xl cursor-not-allowed"
+                            >
+                                Product Sold
+                            </button>
 
-                            Add to Cart
+                        ) : isOwner ? (
 
-                        </button>
+                            <button
+                                disabled
+                                className="flex-1 bg-gray-400 text-white py-3 rounded-xl cursor-not-allowed"
+                            >
+                                This is Your Product
+                            </button>
+
+                        ) : (
+
+                            <button
+                                onClick={handleAddToCart}
+                                className="flex-1 bg-teal-700 text-white py-3 rounded-xl flex justify-center items-center gap-3 hover:bg-teal-800"
+                            >
+                                <FaShoppingCart />
+                                Add to Cart
+                            </button>
+
+                        )}
 
                         <button className="w-14 h-14 rounded-xl border flex justify-center items-center hover:bg-red-50">
 

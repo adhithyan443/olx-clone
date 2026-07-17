@@ -6,7 +6,8 @@ import {
     createProduct,
     getMyProducts,
     updateProduct as updateProductService,
-    deleteProduct as deleteProductService
+    deleteProduct as deleteProductService,
+    checkout as checkoutService
 } from "./productService";
 
 
@@ -104,3 +105,26 @@ export const deleteProduct = createAsyncThunk(
         }
     }
 )
+
+export const checkoutProducts = createAsyncThunk(
+
+    "products/checkout",
+
+    async (productIds, thunkAPI) => {
+
+        try {
+
+            return await checkoutService(productIds);
+
+        } catch (error) {
+
+            return thunkAPI.rejectWithValue(
+                error.response?.data?.message ||
+                "Checkout failed"
+            );
+
+        }
+
+    }
+
+);

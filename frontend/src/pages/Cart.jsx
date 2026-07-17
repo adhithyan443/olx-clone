@@ -1,11 +1,46 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../features/cart/cartSlice";
+import { clearCart, removeFromCart } from "../features/cart/cartSlice";
+import { useNavigate } from "react-router-dom";
+import { checkoutProducts, fetchProducts } from "../features/product/productThunk";
+import { toast } from "react-toastify";
 
 export default function Cart() {
 
     const dispatch = useDispatch();
 
     const { items } = useSelector(state => state.cart);
+    const { loading } = useSelector(state => state.products);
+
+    const navigate = useNavigate();
+
+    const handleCheckout = async () => {
+
+        const productIds = items.map(item => item.id);
+
+        const result = await dispatch(
+
+            checkoutProducts(productIds)
+
+        );
+
+        if (checkoutProducts.fulfilled.match(result)) {
+
+            dispatch(clearCart());
+
+
+            dispatch(fetchProducts());
+
+            toast.success("Checkout completed successfully!");
+
+            navigate("/");
+
+        } else {
+
+            toast.error(result.payload || "Checkout failed");
+
+        }
+
+    };
 
     if (items.length === 0) {
         return (
@@ -98,9 +133,11 @@ export default function Cart() {
                     </div>
 
                     <button
+                        onClick={handleCheckout}
+                        disabled={loading || items.length === 0}
                         className="w-full mt-6 bg-teal-700 text-white py-4 rounded-lg hover:bg-teal-800"
                     >
-                        Proceed to Checkout
+                        {loading ? "Processing..." : "Proceed to Checkout"}
                     </button>
 
                 </div>

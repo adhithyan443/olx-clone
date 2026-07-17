@@ -12,11 +12,13 @@ const cartSlice = createSlice({
         addToCart: (state, action) => {
             const product = action.payload;
 
-            const existingItem = state.items.find(item => item.id === product.id);
+            const exists = state.items.find(item => item.id === product.id);
 
-            if (!existingItem) {
-                state.items.push(product)
+            if (exists) {
+                return;
             }
+
+            state.items.push(action.payload);
         },
 
         removeFromCart: (state, action) => {
