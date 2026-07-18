@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaHeart, FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchProductsById } from "../features/product/productThunk";
@@ -139,11 +139,11 @@ export default function ProductDetails() {
 
                         )}
 
-                        <button className="w-14 h-14 rounded-xl border flex justify-center items-center hover:bg-red-50">
+                        {/* <button className="w-14 h-14 rounded-xl border flex justify-center items-center hover:bg-red-50">
 
                             <FaHeart className="text-red-500" />
 
-                        </button>
+                        </button> */}
 
                     </div>
 

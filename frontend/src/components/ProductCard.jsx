@@ -1,4 +1,4 @@
-import { FaHeart, FaEdit, FaTrash, } from "react-icons/fa";
+import {  FaEdit, FaTrash, } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteProduct, fetchMyProducts } from "../features/product/productThunk";
@@ -39,12 +39,12 @@ export default function ProductCard({ product, isOwner = false }) {
                     className="w-full h-56 object-cover"
                 />
 
-                <button
+                {/* <button
                     onClick={(e) => e.preventDefault()}
                     className="absolute top-3 right-3 bg-white p-2 rounded-full shadow"
                 >
                     <FaHeart className="text-gray-500 hover:text-red-500" />
-                </button>
+                </button> */}
 
             </div>
 

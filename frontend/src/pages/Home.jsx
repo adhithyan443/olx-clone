@@ -12,7 +12,12 @@ export default function Home() {
         (state) => state.products
     );
 
+    const keyword = useSelector(
+        (state) => state.search.keyword
+    );
+
     const [filters, setFilters] = useState({
+        search: "",
         category: "",
         minPrice: "",
         maxPrice: "",
@@ -20,15 +25,28 @@ export default function Home() {
     });
 
     useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch]);
+
+        dispatch(
+            fetchProducts({
+                ...filters,
+                search: keyword,
+            })
+        );
+
+    }, [dispatch, keyword]);
 
     const applyFilters = (currentFilters = filters) => {
-        dispatch(fetchProducts(currentFilters));
+        dispatch(
+            fetchProducts({
+                ...currentFilters,
+                search: keyword,
+            })
+        );
     };
 
     const resetFilters = () => {
         const reset = {
+            search: "",
             category: "",
             minPrice: "",
             maxPrice: "",
@@ -36,7 +54,13 @@ export default function Home() {
         };
 
         setFilters(reset);
-        dispatch(fetchProducts(reset));
+
+        dispatch(
+            fetchProducts({
+                ...reset,
+                search: keyword,
+            })
+        );
     };
 
     if (loading) {

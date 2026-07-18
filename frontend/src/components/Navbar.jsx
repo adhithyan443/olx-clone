@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { setSearch } from "../features/search/searchSlice";
+import { useLocation } from "react-router-dom";
 import {
     FaSearch,
-    FaBell,
-    FaHeart,
+    // FaBell,
+    // FaHeart,
     FaShoppingCart,
     // FaUserCircle,
 } from "react-icons/fa";
@@ -16,7 +18,10 @@ export default function Navbar() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
 
+
+    const showSearch = location.pathname === "/";
 
 
     const { isAuthenticated, user } = useSelector(
@@ -25,6 +30,9 @@ export default function Navbar() {
 
     const { items } = useSelector(
         (state) => state.cart
+    );
+    const keyword = useSelector(
+        state => state.search.keyword
     );
 
     const handleLogout = () => {
@@ -73,34 +81,38 @@ export default function Navbar() {
                 </div>
 
                 {/* Search */}
-                <div className="hidden lg:flex items-center bg-gray-100 rounded-lg px-4 py-2 w-96">
+                {showSearch && (
+                    <div className="hidden lg:flex items-center bg-gray-100 rounded-lg px-4 py-2 w-96">
 
-                    <FaSearch className="text-gray-500" />
+                        <FaSearch className="text-gray-500" />
 
-                    <input
-                        type="text"
-                        placeholder="Search products..."
-                        className="bg-transparent outline-none ml-3 w-full"
-                    />
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            value={keyword}
+                            onChange={(e) => dispatch(setSearch(e.target.value))}
+                            className="bg-transparent outline-none ml-3 w-full"
+                        />
 
-                </div>
+                    </div>
+                )}
 
                 {/* Right */}
                 <div className="flex items-center gap-5">
 
-                    <button>
+                    {/* <button>
                         <FaHeart
                             size={20}
                             className="text-gray-600 hover:text-red-500"
                         />
-                    </button>
+                    </button> */}
 
-                    <button>
+                    {/* <button>
                         <FaBell
                             size={20}
                             className="text-gray-600 hover:text-teal-700"
                         />
-                    </button>
+                    </button> */}
 
                     <Link
                         to="/cart"

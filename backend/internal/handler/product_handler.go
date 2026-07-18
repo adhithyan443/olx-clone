@@ -77,6 +77,7 @@ func (h *ProductHandler) Create(ctx *gin.Context) {
 
 func (h *ProductHandler) GetAll(ctx *gin.Context) {
 
+	search := ctx.Query("search")
 	category := ctx.Query("category")
 
 	minPrice, _ := strconv.ParseFloat(
@@ -92,7 +93,7 @@ func (h *ProductHandler) GetAll(ctx *gin.Context) {
 	sort := ctx.DefaultQuery("sort", "newest")
 
 	products, err := h.productUsecase.GetAll(
-		category, minPrice, maxPrice, sort,
+		search,  category, minPrice, maxPrice, sort,
 	)
 
 	if err != nil {

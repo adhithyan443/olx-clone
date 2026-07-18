@@ -11,7 +11,7 @@ type ProductRepository interface {
 	Update(product *domain.Product) error
 	Delete(id string) error
 	FindByID(id string) (*domain.Product, error)
-	FindAll(category string, minPrice, maaxPrice float64, sort string) ([]domain.Product, error)
+	FindAll(search, category string, minPrice, maaxPrice float64, sort string) ([]domain.Product, error)
 	FindByUser(userID string) ([]domain.Product, error)
 	Checkout(productIDs []string) error
 }
@@ -51,10 +51,22 @@ func (r *productRepository) FindByID(id string) (*domain.Product, error) {
 	return &product, nil
 }
 
-func (r *productRepository) FindAll(category string, minPrice, maxPrice float64, sort string) ([]domain.Product, error) {
+func (r *productRepository) FindAll(search, category string, minPrice, maxPrice float64, sort string) ([]domain.Product, error) {
 	var products []domain.Product
 
 	query := r.db.Where("is_sold = ?", false)
+
+	// Search
+	if search != "" {
+		like := "%" + search + "%"
+
+		query = query.Where(
+			"title ILIKE ? OR description ILIKE ? OR category ILIKE ?",
+			like,
+			like,
+			like,
+		)
+	}
 
 	//category filter
 	if category != "" {
